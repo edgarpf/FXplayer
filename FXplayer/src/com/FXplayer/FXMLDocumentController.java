@@ -12,15 +12,26 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.apache.commons.io.FilenameUtils;
 
 public class FXMLDocumentController implements Initializable {
@@ -28,13 +39,31 @@ public class FXMLDocumentController implements Initializable {
     private String lastDirectory;
 
     @FXML
+    private Button buttonPlay;
+
+    @FXML
+    private Button buttonStop;
+
+    @FXML
+    private Button buttonRepeat;
+
+    @FXML
+    private Slider slider;
+
+    @FXML
     private MediaView mediaView;
 
     @FXML
+    private Label totalTime;
+
+    @FXML
+    private Label currentTime;
+
+    @FXML
     public HBox player;
-    
+
     private MediaPlayer mediaPlayer;
-        
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //mediaView.setFitHeight(mediaView.getScene().getHeight() - 45);
@@ -106,11 +135,14 @@ public class FXMLDocumentController implements Initializable {
                  */
             }
 
-            initPlayer(file.toURI().toString());
+            initPlayer(file);
         }
     }
 
-    private void initPlayer(String uri) {
+    private static final double MIN_CHANGE = 0.5 ;
+    
+    private void initPlayer(File file) {
+        String uri = file.toURI().toString();
         if (uri == null) {
             return;
         }
@@ -129,6 +161,50 @@ public class FXMLDocumentController implements Initializable {
             @Override
             public void run() {
                 ((Stage) mediaView.getScene().getWindow()).setTitle(new File(uri).getName().replace("%20", " "));
+                totalTime.setText(Util.getPrettyDurationString(mediaPlayer.getTotalDuration().toSeconds()));
+                slider.setDisable(false);
+                slider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+                buttonStop.setDisable(false);
+                buttonPlay.setDisable(false);
+                buttonRepeat.setDisable(false);
+                buttonPlay.setStyle("-fx-graphic: url(\"pause.png\");");
+            }
+        });
+
+        mediaPlayer.currentTimeProperty().addListener(new InvalidationListener() {
+
+            @Override
+            public void invalidated(Observable observable) {
+                if (!slider.isValueChanging()) {
+                    slider.setValue(mediaPlayer.getCurrentTime().toSeconds());
+                    currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
+                }
+            }
+        });
+
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (! slider.isValueChanging()) {
+                double ct= mediaPlayer.getCurrentTime().toSeconds();
+                if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
+                    mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));                                        
+                    currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
+                }
+            }
+            }
+        });
+
+        slider.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue)
+                {
+                    mediaPlayer.seek(Duration.seconds(slider.getValue()));
+                    currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
+                }
             }
         });
     }
@@ -143,4 +219,33 @@ public class FXMLDocumentController implements Initializable {
         mediaView.getScene().setCursor(Cursor.DEFAULT);
     }
 
+    @FXML
+    public void stop() {
+
+        mediaPlayer.stop();
+        buttonPlay.setStyle("-fx-graphic: url(\"play.png\");");
+        slider.setValue(0);
+
+    }
+
+    @FXML
+    public void pause() {
+        boolean playing = mediaPlayer.getStatus().equals(Status.PLAYING);
+
+        if (playing) {
+            mediaPlayer.pause();
+            buttonPlay.setStyle("-fx-graphic: url(\"play.png\");");
+        } else {
+            mediaPlayer.play();
+            buttonPlay.setStyle("-fx-graphic: url(\"pause.png\");");
+        }
+    }
+
+    @FXML
+    public void changeTime() {
+        System.out.println("hahaha");
+        Duration d = new Duration(slider.getValue());
+        mediaPlayer.seek(d);
+        currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
+    }
 }
