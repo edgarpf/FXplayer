@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -29,11 +30,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MediaView mediaView;
 
+    @FXML
+    public HBox player;
+    
     private MediaPlayer mediaPlayer;
-
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        //mediaView.setFitHeight(mediaView.getScene().getHeight() - 45);
+        //mediaView.setFitWidth(mediaView.getScene().getWidth() - 45);
+        //player.setMinHeight(player.getScene().getHeight()-45);
+        player.setPrefHeight(600);
     }
 
     @FXML
