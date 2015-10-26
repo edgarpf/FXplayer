@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.media.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,18 +9,47 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox maxHeight="-Infinity" fx:controller="com.FXplayer.FXMLDocumentController" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FXplayer.FXMLDocumentController">
    <children>
       <MenuBar>
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem onAction="#openFile" mnemonicParsing="false" text="Open File..." />
+              <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open File..." />
             </items>
           </Menu>
         </menus>
       </MenuBar>
-      <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: black;">
+         <children>
+            <MediaView fx:id="mediaView" fitHeight="400.0" fitWidth="400.0" />
+         </children>
+      </HBox>
+      <Slider onMouseEntered="#changeMouseIconToHand" onMouseExited="#changeMouseIconToPointer" prefHeight="45.0" prefWidth="600.0">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Slider>
+      <HBox prefHeight="47.0" prefWidth="600.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="52.0" text="Button" />
+            <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="52.0" text="Button" />
+            <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="52.0" text="Button" />
+            <HBox alignment="TOP_RIGHT">
+               <children>
+                  <Label alignment="CENTER" prefHeight="41.0" prefWidth="28.0" text="0:00" />
+               </children>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </HBox>
    </children>
 </VBox>
