@@ -3,17 +3,18 @@ package com.FXplayer;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class FXMLDocumentController implements Initializable {
 
+    private String lastDirectory;
+    
     @FXML
     private MediaView mediaView;
 
@@ -21,17 +22,24 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
     }
 
     @FXML
     public void openFile() {
+        
+        
         FileChooser fileChooser = new FileChooser();        
-        File file = fileChooser.showOpenDialog(null);        
-        if (file != null) {
-            //mediaView.
+        
+        if(lastDirectory != null)
+            fileChooser.setInitialDirectory(new File(lastDirectory));
+                    
+        File file = fileChooser.showOpenDialog(null);    
+        lastDirectory = file.getParent();
+        
+        if (file != null)
             initPlayer(file.toURI().toString());
-        }
+        
     }
     
     private void initPlayer (String uri) {
@@ -51,7 +59,7 @@ public class FXMLDocumentController implements Initializable {
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
+                ((Stage)mediaView.getScene().getWindow()).setTitle(new File(uri).getName());
             }
         });
     }
