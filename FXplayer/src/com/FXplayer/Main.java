@@ -17,6 +17,8 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.getIcons().add(new Image("icon.png"));
         stage.setTitle("FXplayer");
+        stage.setMaximized(true);        
+        //stage.setFullScreen(true);
         stage.show();
     }
     
