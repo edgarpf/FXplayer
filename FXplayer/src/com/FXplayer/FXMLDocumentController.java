@@ -16,6 +16,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
@@ -24,7 +25,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -61,15 +65,28 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public HBox player;
+    
+    @FXML
+    public VBox root;
 
     private MediaPlayer mediaPlayer;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //mediaView.setFitHeight(mediaView.getScene().getHeight() - 45);
-        //mediaView.setFitWidth(mediaView.getScene().getWidth() - 45);
-        //player.setMinHeight(player.getScene().getHeight()-45);
-        player.setPrefHeight(600);
+        double height = player.getPrefHeight();
+        double width  = 1067*height/600;
+        
+        mediaView.setFitHeight(height);
+        mediaView.setFitWidth(width);
+        
+        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.SPACE)
+                    buttonPlay.fire();
+            }
+        });
     }
 
     @FXML
