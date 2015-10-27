@@ -107,9 +107,15 @@ public class FXMLDocumentController implements Initializable {
             mediaPlayer.stop();
             mediaPlayer = null;
         }
-
+        
         prepareMedia(uri);        
-        setComponentEvents(uri);
+        setComponentEvents(uri); 
+        
+        if(repeat)
+        {
+            repeat = false;
+            buttonRepeat.setStyle("-fx-background-color: transparent;");            
+        }
     }
 
     private void prepareMedia(String uri) {
@@ -216,7 +222,6 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void changeTime() {
-        System.out.println("hahaha");
         Duration d = new Duration(slider.getValue());
         mediaPlayer.seek(d);
         currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
@@ -230,10 +235,7 @@ public class FXMLDocumentController implements Initializable {
         if(!repeat)
         {
             buttonRepeat.setStyle("-fx-background-color: #C3C3C3;");
-            repeat = true;
-            //buttonRepeat.setPrefHeight(41);
-            //buttonRepeat.setPrefWidth(52);
-            
+            repeat = true;                       
             mediaPlayer.setOnEndOfMedia(new Runnable() {
 
                 @Override
@@ -249,7 +251,6 @@ public class FXMLDocumentController implements Initializable {
             buttonRepeat.setStyle("-fx-background-color: transparent;");
             repeat = false;
             mediaPlayer.setOnEndOfMedia(new Runnable() {
-
                 @Override
                 public void run() {                    
                 }
