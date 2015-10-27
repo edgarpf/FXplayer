@@ -28,7 +28,7 @@
             <Insets bottom="10.0" />
          </VBox.margin>
       </HBox>
-      <Slider fx:id="slider" disable="true" onMouseDragEntered="#changeTime" onMouseEntered="#changeMouseIconToHand" onMouseExited="#changeMouseIconToPointer">
+      <Slider fx:id="slider" disable="true" focusTraversable="false" onMouseDragEntered="#changeTime" onMouseEntered="#changeMouseIconToHand" onMouseExited="#changeMouseIconToPointer">
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -72,6 +72,11 @@
                   <Insets left="5.0" />
                </HBox.margin>
             </HBox>
+            <Slider fx:id="volume" blockIncrement="0.1" disable="true" focusTraversable="false" max="1.0" prefHeight="14.0" prefWidth="101.0" value="1.0">
+               <HBox.margin>
+                  <Insets top="12.0" />
+               </HBox.margin>
+            </Slider>
          </children>
          <padding>
             <Insets bottom="10.0" left="5.0" />

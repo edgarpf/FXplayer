@@ -1,42 +1,20 @@
 package com.FXplayer;
 
-import it.sauronsoftware.jave.AudioAttributes;
-import it.sauronsoftware.jave.AudioInfo;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
-import it.sauronsoftware.jave.EncoderProgressListener;
-import it.sauronsoftware.jave.EncodingAttributes;
-import it.sauronsoftware.jave.MultimediaInfo;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.*;
+import javafx.beans.value.*;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.*;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
+import javafx.scene.media.*;
 import javafx.scene.media.MediaPlayer.Status;
-import javafx.scene.media.MediaView;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import javafx.util.Duration;
-import org.apache.commons.io.FilenameUtils;
 
 public class FXMLDocumentController implements Initializable {
 
@@ -54,6 +32,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Slider slider;
 
+    @FXML
+    private Slider volume;
+    
     @FXML
     private MediaView mediaView;
 
@@ -90,7 +71,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    public void openFile() throws IllegalArgumentException, EncoderException {
+    public void openFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a Media File");
         fileChooser.getExtensionFilters().addAll(
@@ -109,49 +90,7 @@ public class FXMLDocumentController implements Initializable {
         lastDirectory = file.getParent();
 
         if (file != null) {
-            //MultimediaInfo mi = new MultimediaInfo();                                    
-            String ext = FilenameUtils.getExtension(file.getPath());
-            /*
-             Encoder e = new Encoder();
-            
-             MultimediaInfo mi = e.getInfo(file);
-             AudioInfo ai = mi.getAudio();
-             System.out.println(ai.getDecoder());            
-             String[] s = e.getSupportedDecodingFormats();
-             String[] s1 = e.getSupportedEncodingFormats();
-             String[] s3 = e.getAudioEncoders();
-             String[] s4 = e.getVideoEncoders();
-             String[] s5 = e.getAudioDecoders();
-             */
-            if (ext.equals("ogg") || ext.equals("mkv")) {
-                /*
-                 EncodingAttributes ea = new EncodingAttributes();
-                 ea.setFormat("mp3"); 
-                
-                 AudioAttributes aa = new AudioAttributes();
-                 aa.setCodec("pcm_alaw");
-                 aa.setVolume(256);
-                 ea.setAudioAttributes(aa);
-                 ea.setVideoAttributes(null);                
-                 e.encode(file,file,ea, new EncoderProgressListener() {
-
-                 @Override
-                 public void sourceInfo(MultimediaInfo mi) {
-                 }
-
-                 @Override
-                 public void progress(int i) {
-                 System.out.println("" + i);
-                 }
-
-                 @Override
-                 public void message(String string) {
-                 }
-                 });
-                 //initPlayer(f.toURI().toString());
-                 */
-            }
-
+            //String ext = FilenameUtils.getExtension(file.getPath());                     
             initPlayer(file);
         }
     }
@@ -173,7 +112,9 @@ public class FXMLDocumentController implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
         mediaView.setMediaPlayer(mediaPlayer);
-
+        mediaPlayer.setVolume(volume.getValue());
+        volume.setDisable(false);
+        
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
@@ -212,18 +153,15 @@ public class FXMLDocumentController implements Initializable {
             }
             }
         });
-
-        slider.valueChangingProperty().addListener(new ChangeListener<Boolean>() {
+     
+        volume.valueProperty().addListener(new ChangeListener<Number>() {
 
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(!newValue)
-                {
-                    mediaPlayer.seek(Duration.seconds(slider.getValue()));
-                    currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
-                }
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                mediaPlayer.setVolume(volume.getValue());
             }
         });
+        
     }
 
     @FXML
