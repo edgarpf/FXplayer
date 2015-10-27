@@ -69,17 +69,7 @@ public class FXMLDocumentController implements Initializable {
         double width = 1067 * height / 600;
 
         mediaView.setFitHeight(height);
-        mediaView.setFitWidth(width);
-
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE) {
-                    buttonPlay.fire();
-                }
-            }
-        });
+        mediaView.setFitWidth(width);        
     }
 
     @FXML
@@ -102,13 +92,11 @@ public class FXMLDocumentController implements Initializable {
         lastDirectory = file.getParent();
 
         if (file != null) {
-            //String ext = FilenameUtils.getExtension(file.getPath());                     
+            mediaView.setDisable(false);
             initPlayer(file);
         }
     }
-
-    private static final double MIN_CHANGE = 0.5;
-
+   
     private void initPlayer(File file) {
         String uri = file.toURI().toString();
         if (uri == null) {
@@ -120,13 +108,32 @@ public class FXMLDocumentController implements Initializable {
             mediaPlayer = null;
         }
 
+        prepareMedia(uri);        
+        setComponentEvents(uri);
+    }
+
+    private void prepareMedia(String uri) {
         Media media = new Media(uri);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setVolume(volume.getValue());
         volume.setDisable(false);
+    }
 
+    private static final double MIN_CHANGE = 0.5;
+    
+    private void setComponentEvents(String uri) {
+        
+        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.SPACE) {
+                    buttonPlay.fire();
+                }
+            }
+        });
+        
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
@@ -173,7 +180,6 @@ public class FXMLDocumentController implements Initializable {
                 mediaPlayer.setVolume(volume.getValue());
             }
         });
-
     }
 
     @FXML
@@ -214,5 +220,16 @@ public class FXMLDocumentController implements Initializable {
         Duration d = new Duration(slider.getValue());
         mediaPlayer.seek(d);
         currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
+    }
+    
+    private boolean repeat = false;
+    
+    @FXML
+    public void repeat()
+    {
+        if(!repeat)
+        {
+            
+        }
     }
 }
