@@ -1,3 +1,30 @@
 .button:focused{
      -fx-focus-color: transparent;
 }
+
+.webView
+{
+    -fx-background-color: black;    
+}
+
+#subtitle1
+{        
+    -fx-text-fill: white;    
+    -fx-stroke: white;
+    -fx-stroke-width: 2px;
+    -fx-translate-y: 250;    
+}
+
+#subtitle2
+{        
+    -fx-text-fill: white;
+    -fx-stroke: white;
+    -fx-stroke-width: 2px;    
+}
+
+#subtitle3
+{        
+    -fx-text-fill: white;
+    -fx-stroke: white;
+    -fx-stroke-width: 2px;       
+}

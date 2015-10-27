@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.media.*?>
@@ -22,7 +24,26 @@
       </MenuBar>
       <HBox fx:id="player" alignment="CENTER" prefHeight="600" prefWidth="600.0" style="-fx-background-color: black;">
          <children>
-            <MediaView fx:id="mediaView" fitHeight="400.0" fitWidth="400.0" />
+            <StackPane prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <MediaView fx:id="mediaView" fitHeight="400.0" fitWidth="400.0" />
+                  <Text fx:id="subtitle1" text="">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="subtitle2" text="">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="subtitle3" text="">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </StackPane>
          </children>
          <VBox.margin>
             <Insets bottom="10.0" />

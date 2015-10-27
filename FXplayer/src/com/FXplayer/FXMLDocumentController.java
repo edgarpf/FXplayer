@@ -13,6 +13,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.*;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Duration;
 
@@ -34,7 +35,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Slider volume;
-    
+
     @FXML
     private MediaView mediaView;
 
@@ -46,26 +47,37 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public HBox player;
-    
+
     @FXML
     public VBox root;
+
+    @FXML
+    private Text subtitle1;
+
+    @FXML
+    private Text subtitle2;
+
+    @FXML
+    private Text subtitle3;
 
     private MediaPlayer mediaPlayer;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         double height = player.getPrefHeight();
-        double width  = 1067*height/600;
-        
+        double width = 1067 * height / 600;
+
         mediaView.setFitHeight(height);
         mediaView.setFitWidth(width);
-        
+
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode() == KeyCode.SPACE)
+                if (event.getCode() == KeyCode.SPACE) {
                     buttonPlay.fire();
+                }
             }
         });
     }
@@ -95,8 +107,8 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
-    private static final double MIN_CHANGE = 0.5 ;
-    
+    private static final double MIN_CHANGE = 0.5;
+
     private void initPlayer(File file) {
         String uri = file.toURI().toString();
         if (uri == null) {
@@ -114,7 +126,7 @@ public class FXMLDocumentController implements Initializable {
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setVolume(volume.getValue());
         volume.setDisable(false);
-        
+
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
@@ -144,16 +156,16 @@ public class FXMLDocumentController implements Initializable {
 
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (! slider.isValueChanging()) {
-                double ct= mediaPlayer.getCurrentTime().toSeconds();
-                if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
-                    mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));                                        
-                    currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
+                if (!slider.isValueChanging()) {
+                    double ct = mediaPlayer.getCurrentTime().toSeconds();
+                    if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
+                        mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
+                        currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
+                    }
                 }
             }
-            }
         });
-     
+
         volume.valueProperty().addListener(new ChangeListener<Number>() {
 
             @Override
@@ -161,7 +173,7 @@ public class FXMLDocumentController implements Initializable {
                 mediaPlayer.setVolume(volume.getValue());
             }
         });
-        
+
     }
 
     @FXML
