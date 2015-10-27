@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Duration;
 
-public class FXMLDocumentController implements Initializable {
+public class PlayerController implements Initializable {
 
     private String lastDirectory;
 
@@ -64,10 +64,8 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         double height = player.getPrefHeight();
         double width = 1067 * height / 600;
-
         mediaView.setFitHeight(height);
         mediaView.setFitWidth(width);        
     }
@@ -256,5 +254,27 @@ public class FXMLDocumentController implements Initializable {
                 }
             });
         }
+    }
+    
+    private boolean fullScreen = false;
+    
+    @FXML
+    public void changeViewMode(MouseEvent mouseEvent)
+    {
+        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+            if(mouseEvent.getClickCount() == 2){
+                if(fullScreen)
+                {
+                }                                    
+                else                
+                    changeToFullScreenMode();
+                
+            }
+        }
+    }
+    
+    private void changeToFullScreenMode()
+    {
+        
     }
 }

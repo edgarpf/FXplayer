@@ -11,7 +11,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="600.0" stylesheets="@general.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FXplayer.FXMLDocumentController">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="600.0" stylesheets="@general.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.FXplayer.PlayerController">
    <children>
       <MenuBar>
         <menus>
@@ -26,7 +26,7 @@
          <children>
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
-                  <MediaView fx:id="mediaView" disable="true" fitHeight="400.0" fitWidth="400.0" onMouseEntered="#changeMouseIconToHand" onMouseExited="#changeMouseIconToPointer" />
+                  <MediaView fx:id="mediaView" disable="true" fitHeight="400.0" fitWidth="400.0" onMouseClicked="#changeViewMode" onMouseEntered="#changeMouseIconToHand" onMouseExited="#changeMouseIconToPointer" />
                   <Text fx:id="subtitle1" text="">
                      <font>
                         <Font size="24.0" />
@@ -54,7 +54,7 @@
             <Insets />
          </VBox.margin>
          <padding>
-            <Insets left="5.0" />
+            <Insets left="3.0" />
          </padding>
       </Slider>
       <HBox prefHeight="47.0" prefWidth="600.0">
