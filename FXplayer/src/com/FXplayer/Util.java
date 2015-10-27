@@ -5,10 +5,10 @@ package com.FXplayer;
 public class Util {
     public static String getPrettyDurationString(Double duration)
     {
-        long totalSeg = Math.round(duration);
-        long hour = totalSeg/3600;
-        long min = (totalSeg - 3600*hour)/60;
-        long seg = (totalSeg - 3600*hour - 60*min);
+        long totalSec = Math.round(duration);
+        long hour = totalSec/3600;
+        long min = (totalSec - 3600*hour)/60;
+        long seg = (totalSec - 3600*hour - 60*min);
         
         String prettyHour = (hour < 10 ? "0" + hour : "" + hour);
         String prettyMin = (min < 10 ? "0" + min : "" + min);
