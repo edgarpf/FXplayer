@@ -1,7 +1,17 @@
+.button
+{
+    -fx-background-color: transparent;
+}
+
 .button:focused{
      -fx-focus-color: transparent;
 }
-
+/*
+.button:hover
+{
+   -fx-background-color: #D2D2D2;    
+}
+*/
 .webView
 {
     -fx-background-color: black;    

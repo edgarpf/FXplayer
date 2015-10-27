@@ -229,7 +229,31 @@ public class FXMLDocumentController implements Initializable {
     {
         if(!repeat)
         {
+            buttonRepeat.setStyle("-fx-background-color: #C3C3C3;");
+            repeat = true;
+            //buttonRepeat.setPrefHeight(41);
+            //buttonRepeat.setPrefWidth(52);
             
+            mediaPlayer.setOnEndOfMedia(new Runnable() {
+
+                @Override
+                public void run() {
+                    System.out.println("chegou ao final");
+                    mediaPlayer.seek(Duration.ZERO);
+                }
+            });
+        }
+        
+        else
+        {
+            buttonRepeat.setStyle("-fx-background-color: transparent;");
+            repeat = false;
+            mediaPlayer.setOnEndOfMedia(new Runnable() {
+
+                @Override
+                public void run() {                    
+                }
+            });
         }
     }
 }
