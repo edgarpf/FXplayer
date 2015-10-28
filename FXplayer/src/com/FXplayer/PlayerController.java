@@ -75,10 +75,24 @@ public class PlayerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        double height = player.getPrefHeight();
+        if(Util.controls != null)
+        {
+            for(Node n : Util.controls.getChildren())       
+            {
+                
+            }
+            
+            mediaPlayer = Util.mediaView.getMediaPlayer();
+            mediaView.setMediaPlayer(mediaPlayer);
+            mediaPlayer.play();
+            mediaView.setDisable(false);
+        }
+        
+        double height = player.getPrefHeight();               
         double width = 1067 * height / 600;
         mediaView.setFitHeight(height);
-        mediaView.setFitWidth(width);
+        mediaView.setFitWidth(width);  
+               
     }
 
     @FXML
@@ -244,11 +258,13 @@ public class PlayerController implements Initializable {
             if (mouseEvent.getClickCount() == 2) {
                 changeToFullScreenMode();
                 Util.root = root;
+                Util.controls = controls;
+                Util.mediaView = mediaView;
             }
         }
     }
 
-    private void changeToFullScreenMode() {
+    private void changeToFullScreenMode() {        
         StackPane root = new StackPane();
         root.setStyle("-fx-background-color: black;");
         root.getChildren().add(mediaView);
@@ -259,45 +275,46 @@ public class PlayerController implements Initializable {
         Main.s.setScene(scene);
         Main.s.setFullScreen(true);
         controls.setTranslateY(Main.s.getHeight() - 80);
-        mediaView.setFitWidth(1500);
+        //mediaView.setFitWidth(1500);
         final DoubleProperty width = mediaView.fitWidthProperty();
         final DoubleProperty height = mediaView.fitHeightProperty();
         width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
         height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
         Main.s.show();
-        
+
         controls.setOpacity(0);
-        
-        controls.setOnMouseEntered(e->{                          
-                controls.setOpacity(1);            
+
+        controls.setOnMouseEntered(e -> {
+            controls.setOpacity(1);
         });
 
-        controls.setOnMouseExited(e->{                          
-                controls.setOpacity(0);            
+        controls.setOnMouseExited(e -> {
+            controls.setOpacity(0);
         });
 
-        mediaView.setOnMouseClicked(e -> {            
-                if (e.getButton().equals(MouseButton.PRIMARY)) {
-                    /*
-                     if (mouseEvent.getClickCount() == 2) {                                                  
-                     try {                            
-                            
-                     Parent root = FXMLLoader.load(getClass().getResource("Player.fxml"));                            
-                     Scene scene = new Scene(root);                                                       
-                     Main.s.setScene(scene);
-                     Main.s.getIcons().add(new Image("icon.png"));
-                     Main.s.setTitle(Util.title);
-                     Main.s.setMaximized(true);
-                     Main.s.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-                     //Main.s.show();
-                            
-                     } catch (IOException ex) {
-                     Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
-                     }
-                     }
-                     */
+        mediaView.setOnMouseClicked((MouseEvent e) -> {
+            if (e.getButton().equals(MouseButton.PRIMARY)) {
+                if (e.getClickCount() == 2) {
+                    try {                        
+                        Scene s = Main.s.getScene();                                                
+                        Parent r = FXMLLoader.load(getClass().getResource("Player.fxml"));
+                        Scene scene1 = new Scene(r);                        
+                        double h = Main.s.getHeight();
+                        double w = Main.s.getWidth();                        
+                        Main.s.setScene(scene1);                        
+                        Main.s.getIcons().add(new Image("icon.png"));
+                        Main.s.setTitle(Util.title);                        
+                        Main.s.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+                        Main.s.setMaximized(true);
+                        Main.s.setHeight(h);
+                        Main.s.setWidth(w);                        
+                    }catch (IOException ex) {
+                        Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    
                 }
-            
+            }
         });
     }
 }

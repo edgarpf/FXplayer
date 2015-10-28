@@ -2,12 +2,14 @@
 package com.FXplayer;
 
 import javafx.scene.layout.*;
+import javafx.scene.media.MediaView;
 
 
 public class Util {
     
     public static VBox root;
-    
+    public static VBox controls;
+    public static MediaView mediaView;
     public static String title;
     
     public static String getPrettyDurationString(Double duration)
