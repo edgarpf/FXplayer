@@ -3,6 +3,11 @@
     -fx-background-color: transparent;
 }
 
+.button:active
+{
+    -fx-focus-color: transparent;
+}
+
 .button:focused{
      -fx-focus-color: transparent;
 }

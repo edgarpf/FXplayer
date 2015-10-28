@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.*;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
@@ -22,6 +24,9 @@ import javafx.util.Duration;
 public class PlayerController implements Initializable {
 
     private String lastDirectory;
+
+    @FXML
+    private VBox controls;
 
     @FXML
     private Button buttonPlay;
@@ -260,6 +265,7 @@ public class PlayerController implements Initializable {
             if (mouseEvent.getClickCount() == 2) {
                 if (fullScreen) {
                     fullScreen = false;
+                    changeToWindowMode();
                 } else {
                     changeToFullScreenMode();
                     fullScreen = true;
@@ -268,14 +274,26 @@ public class PlayerController implements Initializable {
         }
     }
 
+    private void changeToWindowMode()
+    {
+        
+    }
+    
     private void changeToFullScreenMode() {
-        mediaView.setPreserveRatio(true);
         StackPane root = new StackPane();
         root.getChildren().add(mediaView);
+        root.getChildren().add(controls);
         final Scene scene = new Scene(root, 960, 540);
-        scene.setFill(Color.BLACK);        
+        mediaView.setPreserveRatio(true);
+        scene.setFill(Color.BLACK);
         Main.s.setScene(scene);
         Main.s.setFullScreen(true);
+        controls.setTranslateY(Main.s.getHeight() - 80);
+        mediaView.setFitWidth(1500);
+        final DoubleProperty width = mediaView.fitWidthProperty();
+        final DoubleProperty height = mediaView.fitHeightProperty();
+        width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+        height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
         Main.s.show();
     }
 }
