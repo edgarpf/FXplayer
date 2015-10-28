@@ -1,17 +1,21 @@
 package com.FXplayer;
 
+import static com.FXplayer.Main.s;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.*;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.*;
@@ -53,10 +57,10 @@ public class PlayerController implements Initializable {
     private Label currentTime;
 
     @FXML
-    public HBox player;
+    private HBox player;
 
     @FXML
-    public VBox root;
+    private VBox root;
 
     @FXML
     private Text subtitle1;
@@ -120,6 +124,7 @@ public class PlayerController implements Initializable {
             repeat = false;
             buttonRepeat.setStyle("-fx-background-color: transparent;");
         }
+
     }
 
     private void prepareMedia(String uri) {
@@ -147,7 +152,9 @@ public class PlayerController implements Initializable {
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
-                ((Stage) mediaView.getScene().getWindow()).setTitle(new File(uri).getName().replace("%20", " "));
+                String title = new File(uri).getName().replace("%20", " ");
+                ((Stage) mediaView.getScene().getWindow()).setTitle(title);
+                Util.title = title;
                 totalTime.setText(Util.getPrettyDurationString(mediaPlayer.getTotalDuration().toSeconds()));
                 slider.setDisable(false);
                 slider.setMax(mediaPlayer.getTotalDuration().toSeconds());
@@ -242,7 +249,6 @@ public class PlayerController implements Initializable {
 
                 @Override
                 public void run() {
-                    System.out.println("chegou ao final");
                     mediaPlayer.seek(Duration.ZERO);
                 }
             });
@@ -257,28 +263,16 @@ public class PlayerController implements Initializable {
         }
     }
 
-    private boolean fullScreen = false;
-
     @FXML
     public void changeViewMode(MouseEvent mouseEvent) {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             if (mouseEvent.getClickCount() == 2) {
-                if (fullScreen) {
-                    fullScreen = false;
-                    changeToWindowMode();
-                } else {
-                    changeToFullScreenMode();
-                    fullScreen = true;
-                }
+                changeToFullScreenMode();
+                Util.root = root;
             }
         }
     }
 
-    private void changeToWindowMode()
-    {
-        
-    }
-    
     private void changeToFullScreenMode() {
         StackPane root = new StackPane();
         root.getChildren().add(mediaView);
@@ -295,5 +289,49 @@ public class PlayerController implements Initializable {
         width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
         height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
         Main.s.show();
+        
+        controls.setOpacity(0);
+        
+        controls.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {                
+                controls.setOpacity(1);
+            }
+        });
+
+        controls.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {                
+                controls.setOpacity(0);
+            }
+        });
+
+        mediaView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    /*
+                     if (mouseEvent.getClickCount() == 2) {                                                  
+                     try {                            
+                            
+                     Parent root = FXMLLoader.load(getClass().getResource("Player.fxml"));                            
+                     Scene scene = new Scene(root);                                                       
+                     Main.s.setScene(scene);
+                     Main.s.getIcons().add(new Image("icon.png"));
+                     Main.s.setTitle(Util.title);
+                     Main.s.setMaximized(true);
+                     Main.s.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+                     //Main.s.show();
+                            
+                     } catch (IOException ex) {
+                     Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     }
+                     */
+
+                }
+            }
+        });
     }
 }

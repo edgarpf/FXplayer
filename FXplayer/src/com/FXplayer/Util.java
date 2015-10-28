@@ -1,8 +1,15 @@
 
 package com.FXplayer;
 
+import javafx.scene.layout.*;
+
 
 public class Util {
+    
+    public static VBox root;
+    
+    public static String title;
+    
     public static String getPrettyDurationString(Double duration)
     {
         long totalSec = Math.round(duration);
