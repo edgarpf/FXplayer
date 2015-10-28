@@ -140,62 +140,44 @@ public class PlayerController implements Initializable {
 
     private void setComponentEvents(String uri) {
 
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE) {
-                    buttonPlay.fire();
-                }
+        root.setOnKeyPressed((KeyEvent event) -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                buttonPlay.fire();
             }
         });
 
-        mediaPlayer.setOnReady(new Runnable() {
-            @Override
-            public void run() {
-                String title = new File(uri).getName().replace("%20", " ");
-                ((Stage) mediaView.getScene().getWindow()).setTitle(title);
-                Util.title = title;
-                totalTime.setText(Util.getPrettyDurationString(mediaPlayer.getTotalDuration().toSeconds()));
-                slider.setDisable(false);
-                slider.setMax(mediaPlayer.getTotalDuration().toSeconds());
-                buttonStop.setDisable(false);
-                buttonPlay.setDisable(false);
-                buttonRepeat.setDisable(false);
-                buttonPlay.setStyle("-fx-graphic: url(\"pause.png\");");
+        mediaPlayer.setOnReady(() -> {
+            String title = new File(uri).getName().replace("%20", " ");
+            ((Stage) mediaView.getScene().getWindow()).setTitle(title);
+            Util.title = title;
+            totalTime.setText(Util.getPrettyDurationString(mediaPlayer.getTotalDuration().toSeconds()));
+            slider.setDisable(false);
+            slider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+            buttonStop.setDisable(false);
+            buttonPlay.setDisable(false);
+            buttonRepeat.setDisable(false);
+            buttonPlay.setStyle("-fx-graphic: url(\"pause.png\");");
+        });
+
+        mediaPlayer.currentTimeProperty().addListener((Observable observable) -> {
+            if (!slider.isValueChanging()) {
+                slider.setValue(mediaPlayer.getCurrentTime().toSeconds());
+                currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
             }
         });
 
-        mediaPlayer.currentTimeProperty().addListener(new InvalidationListener() {
-
-            @Override
-            public void invalidated(Observable observable) {
-                if (!slider.isValueChanging()) {
-                    slider.setValue(mediaPlayer.getCurrentTime().toSeconds());
+        slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            if (!slider.isValueChanging()) {
+                double ct = mediaPlayer.getCurrentTime().toSeconds();
+                if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
+                    mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
                     currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
                 }
             }
         });
 
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (!slider.isValueChanging()) {
-                    double ct = mediaPlayer.getCurrentTime().toSeconds();
-                    if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
-                        mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
-                        currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
-                    }
-                }
-            }
-        });
-
-        volume.valueProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                mediaPlayer.setVolume(volume.getValue());
-            }
+        volume.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            mediaPlayer.setVolume(volume.getValue());
         });
     }
 
@@ -245,20 +227,13 @@ public class PlayerController implements Initializable {
         if (!repeat) {
             buttonRepeat.setStyle("-fx-background-color: #C3C3C3;");
             repeat = true;
-            mediaPlayer.setOnEndOfMedia(new Runnable() {
-
-                @Override
-                public void run() {
-                    mediaPlayer.seek(Duration.ZERO);
-                }
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(Duration.ZERO);
             });
         } else {
             buttonRepeat.setStyle("-fx-background-color: transparent;");
             repeat = false;
-            mediaPlayer.setOnEndOfMedia(new Runnable() {
-                @Override
-                public void run() {
-                }
+            mediaPlayer.setOnEndOfMedia(() -> {
             });
         }
     }
@@ -275,6 +250,7 @@ public class PlayerController implements Initializable {
 
     private void changeToFullScreenMode() {
         StackPane root = new StackPane();
+        root.setStyle("-fx-background-color: black;");
         root.getChildren().add(mediaView);
         root.getChildren().add(controls);
         final Scene scene = new Scene(root, 960, 540);
@@ -292,25 +268,16 @@ public class PlayerController implements Initializable {
         
         controls.setOpacity(0);
         
-        controls.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {                
-                controls.setOpacity(1);
-            }
+        controls.setOnMouseEntered(e->{                          
+                controls.setOpacity(1);            
         });
 
-        controls.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {                
-                controls.setOpacity(0);
-            }
+        controls.setOnMouseExited(e->{                          
+                controls.setOpacity(0);            
         });
 
-        mediaView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+        mediaView.setOnMouseClicked(e -> {            
+                if (e.getButton().equals(MouseButton.PRIMARY)) {
                     /*
                      if (mouseEvent.getClickCount() == 2) {                                                  
                      try {                            
@@ -329,9 +296,8 @@ public class PlayerController implements Initializable {
                      }
                      }
                      */
-
                 }
-            }
+            
         });
     }
 }
