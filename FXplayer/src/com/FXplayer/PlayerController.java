@@ -8,11 +8,13 @@ import javafx.beans.value.*;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.media.*;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.Duration;
@@ -67,7 +69,7 @@ public class PlayerController implements Initializable {
         double height = player.getPrefHeight();
         double width = 1067 * height / 600;
         mediaView.setFitHeight(height);
-        mediaView.setFitWidth(width);        
+        mediaView.setFitWidth(width);
     }
 
     @FXML
@@ -94,7 +96,7 @@ public class PlayerController implements Initializable {
             initPlayer(file);
         }
     }
-   
+
     private void initPlayer(File file) {
         String uri = file.toURI().toString();
         if (uri == null) {
@@ -105,14 +107,13 @@ public class PlayerController implements Initializable {
             mediaPlayer.stop();
             mediaPlayer = null;
         }
-        
-        prepareMedia(uri);        
-        setComponentEvents(uri); 
-        
-        if(repeat)
-        {
+
+        prepareMedia(uri);
+        setComponentEvents(uri);
+
+        if (repeat) {
             repeat = false;
-            buttonRepeat.setStyle("-fx-background-color: transparent;");            
+            buttonRepeat.setStyle("-fx-background-color: transparent;");
         }
     }
 
@@ -126,9 +127,9 @@ public class PlayerController implements Initializable {
     }
 
     private static final double MIN_CHANGE = 0.5;
-    
+
     private void setComponentEvents(String uri) {
-        
+
         root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -137,7 +138,7 @@ public class PlayerController implements Initializable {
                 }
             }
         });
-        
+
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
@@ -224,16 +225,14 @@ public class PlayerController implements Initializable {
         mediaPlayer.seek(d);
         currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
     }
-    
+
     private boolean repeat = false;
-    
+
     @FXML
-    public void repeat()
-    {
-        if(!repeat)
-        {
+    public void repeat() {
+        if (!repeat) {
             buttonRepeat.setStyle("-fx-background-color: #C3C3C3;");
-            repeat = true;                       
+            repeat = true;
             mediaPlayer.setOnEndOfMedia(new Runnable() {
 
                 @Override
@@ -242,39 +241,41 @@ public class PlayerController implements Initializable {
                     mediaPlayer.seek(Duration.ZERO);
                 }
             });
-        }
-        
-        else
-        {
+        } else {
             buttonRepeat.setStyle("-fx-background-color: transparent;");
             repeat = false;
             mediaPlayer.setOnEndOfMedia(new Runnable() {
                 @Override
-                public void run() {                    
+                public void run() {
                 }
             });
         }
     }
-    
+
     private boolean fullScreen = false;
-    
+
     @FXML
-    public void changeViewMode(MouseEvent mouseEvent)
-    {
-        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-            if(mouseEvent.getClickCount() == 2){
-                if(fullScreen)
-                {
-                }                                    
-                else                
+    public void changeViewMode(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+            if (mouseEvent.getClickCount() == 2) {
+                if (fullScreen) {
+                    fullScreen = false;
+                } else {
                     changeToFullScreenMode();
-                
+                    fullScreen = true;
+                }
             }
         }
     }
-    
-    private void changeToFullScreenMode()
-    {
-        
+
+    private void changeToFullScreenMode() {
+        mediaView.setPreserveRatio(true);
+        StackPane root = new StackPane();
+        root.getChildren().add(mediaView);
+        final Scene scene = new Scene(root, 960, 540);
+        scene.setFill(Color.BLACK);        
+        Main.s.setScene(scene);
+        Main.s.setFullScreen(true);
+        Main.s.show();
     }
 }
