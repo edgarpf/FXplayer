@@ -10,13 +10,17 @@ FXplayer has only basic features. Features that satisfy a ordinary user.
 # Features
 
 MP4 and MP3 support
+
 Full Screen Mode
+
 Repeat Button
+
 Minimalist and beautiful interface.
 
 # To Do
 
 MKV support
+
 SRT subtitles support
 
 # Images
