@@ -80,7 +80,7 @@ public class PlayerController implements Initializable {
         Platform.runLater(new Runnable() {
 
             @Override
-            public void run() {                             
+            public void run() {
                 syncronizeControl();
             }
         });
@@ -91,36 +91,35 @@ public class PlayerController implements Initializable {
         mediaView.setDisable(false);
 
     }
-    
-    private void syncronizeControl() {        
+
+    private void syncronizeControl() {
         buttonPlay.setDisable(false);
-        
-        if(mediaPlayer.getStatus() == Status.PLAYING)
+
+        if (mediaPlayer.getStatus() == Status.PLAYING) {
             buttonPlay.setStyle("-fx-graphic: url(\"pause.png\");");
-        else
+        } else {
             mediaPlayer.pause();
+        }
         buttonRepeat.setDisable(false);
-        if(Util.repeat)
-        {
-            buttonRepeat.setStyle("-fx-background-color: #C3C3C3;");           
+        if (Util.repeat) {
+            buttonRepeat.setStyle("-fx-background-color: #C3C3C3;");
             mediaPlayer.setOnEndOfMedia(() -> {
                 mediaPlayer.seek(Duration.ZERO);
             });
         }
-            
-        
+
         buttonStop.setDisable(false);
         slider.setDisable(false);
         slider.setMax(mediaPlayer.getTotalDuration().toSeconds());
         totalTime.setText(Util.getPrettyDurationString(mediaPlayer.getTotalDuration().toSeconds()));
         volume.setDisable(false);
         volume.setValue(mediaPlayer.getVolume());
-        
+
         root.setOnKeyPressed((KeyEvent event) -> {
             if (event.getCode() == KeyCode.SPACE) {
                 buttonPlay.fire();
             }
-        });        
+        });
 
         mediaPlayer.currentTimeProperty().addListener((Observable observable) -> {
             if (!slider.isValueChanging()) {
@@ -142,17 +141,17 @@ public class PlayerController implements Initializable {
         volume.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             mediaPlayer.setVolume(volume.getValue());
         });
-                        
+
     }
-   
+
     @FXML
     public void openFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a Media File");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Media Types", "*.mp4", "*.mp3"),                
+                new FileChooser.ExtensionFilter("All Media Types", "*.mp4", "*.mp3"),
                 new FileChooser.ExtensionFilter("MP4", "*.mp4"),
-                new FileChooser.ExtensionFilter("MP3", "*.mp3")                
+                new FileChooser.ExtensionFilter("MP3", "*.mp3")
         );
 
         if (lastDirectory != null) {
@@ -228,14 +227,22 @@ public class PlayerController implements Initializable {
             }
         });
 
-        slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+        slider.valueChangingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //if (!slider.isValueChanging()) {
-               double ct = mediaPlayer.getCurrentTime().toSeconds();
-                if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
-                    mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
-                    currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
-                }
+            double ct = mediaPlayer.getCurrentTime().toSeconds();
+            if (Math.abs(ct - slider.getValue()) > MIN_CHANGE) {
+                mediaPlayer.seek(Duration.seconds(slider.getValue()));
+                currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
+            }
             //}
+        });
+
+        slider.valueProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
+            double ct = mediaPlayer.getCurrentTime().toSeconds();
+            if (Math.abs(ct - slider.getValue()) > MIN_CHANGE) {
+                mediaPlayer.seek(Duration.seconds(slider.getValue()));
+                currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
+            }
         });
 
         volume.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
@@ -281,7 +288,6 @@ public class PlayerController implements Initializable {
         mediaPlayer.seek(d);
         currentTime.setText(Util.getPrettyDurationString(slider.getValue()));
     }
-    
 
     @FXML
     public void repeat() {
