@@ -24,3 +24,7 @@ MKV support
 SRT subtitles support
 
 # Images
+
+![FXplayer](https://github.com/edgarpf/FXplayer/blob/master/FXplayer/src/full.png "FXplayer")
+
+![FXplayer](https://github.com/edgarpf/FXplayer/blob/master/FXplayer/src/window.png "FXplayer")
