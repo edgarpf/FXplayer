@@ -7,6 +7,7 @@ import javafx.scene.media.MediaView;
 
 public class Util {
     
+    public static boolean repeat = false;
     public static VBox root;
     public static VBox controls;
     public static MediaView mediaView;
