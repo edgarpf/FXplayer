@@ -229,13 +229,13 @@ public class PlayerController implements Initializable {
         });
 
         slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (!slider.isValueChanging()) {
-                double ct = mediaPlayer.getCurrentTime().toSeconds();
+            //if (!slider.isValueChanging()) {
+               double ct = mediaPlayer.getCurrentTime().toSeconds();
                 if (Math.abs(ct - newValue.doubleValue()) > MIN_CHANGE) {
                     mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
                     currentTime.setText(Util.getPrettyDurationString(mediaPlayer.getCurrentTime().toSeconds()));
                 }
-            }
+            //}
         });
 
         volume.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
